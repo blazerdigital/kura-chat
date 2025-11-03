@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import ModelStatusBadge from "./ModelStatusBadge";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Chat({ token }) {
   const [messages, setMessages] = useState(() => {
@@ -122,8 +121,7 @@ export default function Chat({ token }) {
             Retrieval
           </label>
 
-          <ModelStatusBadge />
-          <ThemeToggle />
+          <ModelStatusBadge model={model} token={token} />
         </div>
 
         <div className="flex items-end gap-2">

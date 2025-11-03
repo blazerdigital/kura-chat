@@ -1,49 +1,74 @@
 import { useEffect, useState } from "react";
 
-export default function ModelStatusBadge() {
+const MODEL_ENDPOINTS = {
+  "mistral-local": { endpoint: "/ping_llm", label: "Mistral Local" },
+  "gpt-4o-mini": { endpoint: "/ping_gpt5", label: "GPT-4o Cloud" },
+  "gpt-5": { endpoint: "/ping_gpt5", label: "GPT-5 Cloud" },
+};
+
+const STATUS_STYLES = {
+  online: { color: "text-green-500", prefix: "🟢" },
+  standby: { color: "text-amber-500", prefix: "🟡" },
+  offline: { color: "text-red-500", prefix: "🔴" },
+  checking: { color: "text-slate-400", prefix: "" },
+};
+
+export default function ModelStatusBadge({ model = "mistral-local", token }) {
   const [status, setStatus] = useState("checking");
   const [models, setModels] = useState([]);
 
-  async function fetchStatus() {
-    try {
-      const res = await fetch("/ping_llm");
-      if (!res.ok) throw new Error("Bad response");
-      const data = await res.json();
+  useEffect(() => {
+    let isMounted = true;
 
-      if (data.status === "online") {
-        setStatus("online");
+    const fetchStatus = async () => {
+      const info = MODEL_ENDPOINTS[model] ?? MODEL_ENDPOINTS["mistral-local"];
+      try {
+        const res = await fetch(info.endpoint, {
+          headers: token
+            ? {
+                Authorization: `Basic ${token}`,
+              }
+            : undefined,
+        });
+        if (!res.ok) {
+          throw new Error("Bad response");
+        }
+        const data = await res.json();
+        if (!isMounted) return;
+        const newStatus = data.status || "offline";
+        setStatus(newStatus);
         setModels(data.models || []);
-      } else {
+      } catch (error) {
+        if (!isMounted) return;
         setStatus("offline");
         setModels([]);
       }
-    } catch {
-      setStatus("offline");
-      setModels([]);
-    }
-  }
+    };
 
-  useEffect(() => {
     fetchStatus();
     const interval = setInterval(fetchStatus, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [model, token]);
 
-  let color = "text-gray-500";
+  const { color, prefix } = STATUS_STYLES[status] || STATUS_STYLES.checking;
+  const descriptor = MODEL_ENDPOINTS[model]?.label ?? "Model";
+
   let label = "Checking…";
-
   if (status === "online") {
-    color = "text-green-500";
-    label = "🟢 Mistral Local";
+    label = `${prefix} ${descriptor}`;
+  } else if (status === "standby") {
+    label = `${prefix} ${descriptor} (Standby)`;
   } else if (status === "offline") {
-    color = "text-red-500";
-    label = "🔴 Offline";
+    label = `${prefix} Offline`;
   }
 
   return (
     <span
       className={`text-sm ${color}`}
-      title={models.length ? models.join(", ") : undefined}
+      title={models.length ? models.join(", ") : descriptor}
     >
       {label}
     </span>
