@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import ModelStatusBadge from "./ModelStatusBadge";
 
 export default function Chat({ token }) {
   const [messages, setMessages] = useState(() => {
@@ -82,7 +83,7 @@ export default function Chat({ token }) {
       </div>
 
       <div className="border-t p-3 flex flex-col gap-2 bg-white">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <select
             className="border px-3 py-2 rounded-md"
             value={model}
@@ -101,6 +102,8 @@ export default function Chat({ token }) {
             />
             Retrieval
           </label>
+
+          <ModelStatusBadge />
         </div>
 
         <div className="flex gap-2">
