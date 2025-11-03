@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import { buildApiUrl, apiHeaders } from "../lib/api";
 
 const SOURCES = [
   { name: "GPT-5 Cloud", endpoint: "/ping_gpt5" },
@@ -26,12 +27,8 @@ export default function BrainStatusPanel({ open, token }) {
 
     for (const source of SOURCES) {
       try {
-        const res = await fetch(source.endpoint, {
-          headers: token
-            ? {
-                Authorization: `Basic ${token}`,
-              }
-            : undefined,
+        const res = await fetch(buildApiUrl(source.endpoint), {
+          headers: apiHeaders(token),
         });
         if (!res.ok) {
           results[source.name] = "offline";

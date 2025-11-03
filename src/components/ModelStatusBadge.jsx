@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { buildApiUrl, apiHeaders } from "../lib/api";
 
 const MODEL_ENDPOINTS = {
   "mistral-local": { endpoint: "/ping_llm", label: "Mistral Local" },
@@ -23,12 +24,8 @@ export default function ModelStatusBadge({ model = "mistral-local", token }) {
     const fetchStatus = async () => {
       const info = MODEL_ENDPOINTS[model] ?? MODEL_ENDPOINTS["mistral-local"];
       try {
-        const res = await fetch(info.endpoint, {
-          headers: token
-            ? {
-                Authorization: `Basic ${token}`,
-              }
-            : undefined,
+        const res = await fetch(buildApiUrl(info.endpoint), {
+          headers: apiHeaders(token),
         });
         if (!res.ok) {
           throw new Error("Bad response");

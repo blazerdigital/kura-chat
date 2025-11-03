@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import ModelStatusBadge from "./ModelStatusBadge";
+import { buildApiUrl, apiHeaders } from "../lib/api";
 
 export default function Chat({ token }) {
   const [messages, setMessages] = useState(() => {
@@ -47,7 +48,7 @@ export default function Chat({ token }) {
       setMessages((msgs) => [...msgs, { role: "assistant", text: "…" }]);
 
       const res = await axios.post(
-        "http://localhost:8000/ask",
+        buildApiUrl("/ask"),
         {
           question: input,
           namespace: "openai_raw",
@@ -55,9 +56,7 @@ export default function Chat({ token }) {
           model,
         },
         {
-          headers: {
-            Authorization: `Basic ${token}`,
-          },
+          headers: apiHeaders(token),
         }
       );
 
