@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { buildApiUrl } from "../lib/api";
 
 export default function AuthGate({ onAuth }) {
   const [username, setUsername] = useState("");
@@ -9,7 +10,7 @@ export default function AuthGate({ onAuth }) {
     e.preventDefault();
     const token = btoa(`${username}:${password}`);
     try {
-      const res = await fetch("https://bridge.blazerdigital.com/health", {
+      const res = await fetch(buildApiUrl("/health"), {
         headers: { Authorization: `Basic ${token}` },
       });
       if (res.ok) {
