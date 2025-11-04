@@ -16,15 +16,17 @@ export default function ChatWindow({
 }) {
   const scrollRef = useRef(null);
 
+  // Auto-scroll to the bottom whenever new messages arrive
   useEffect(() => {
-    const container = scrollRef.current;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
+    const el = scrollRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
     }
   }, [messages, loading]);
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <main className="flex flex-col flex-1 h-screen bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      {/* Chat messages area */}
       <div className="flex-1 min-h-0 px-3 pt-16 md:px-6">
         <div
           ref={scrollRef}
@@ -49,8 +51,10 @@ export default function ChatWindow({
         </div>
       </div>
 
+      {/* Footer input area */}
       <footer className="border-t border-slate-200 bg-white px-3 py-3 dark:border-slate-800 dark:bg-slate-900 md:px-6">
         <div className="mx-auto w-full max-w-3xl">
+          {/* Model + Retrieval controls */}
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <div className="flex flex-1 flex-wrap items-center gap-3 text-sm">
               <span className="flex items-center gap-2">
@@ -87,6 +91,7 @@ export default function ChatWindow({
             <div>{statusBadge}</div>
           </div>
 
+          {/* Input bar */}
           <ChatInput onSend={onSend} disabled={sending} />
         </div>
       </footer>
