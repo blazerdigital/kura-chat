@@ -25,10 +25,10 @@ export default function ChatWindow({
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      <div className="flex-1 overflow-y-auto px-3 py-4 md:px-6 md:py-4">
+      <div className="flex-1 min-h-0 px-3 pt-16 md:px-6">
         <div
           ref={scrollRef}
-          className="mx-auto flex h-full w-full max-w-3xl flex-col space-y-4 rounded-2xl border border-slate-200 bg-white/90 px-4 py-4 shadow-inner dark:border-slate-800 dark:bg-slate-900/80"
+          className="h-full w-full max-w-3xl mx-auto flex flex-col space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white/90 px-4 py-4 shadow-inner dark:border-slate-800 dark:bg-slate-900/80"
         >
           {loading ? (
             <p className="text-sm text-slate-500">Loading messages…</p>
