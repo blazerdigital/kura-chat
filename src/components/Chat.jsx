@@ -205,70 +205,52 @@ export default function Chat({ token }) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      <div className="hidden h-full lg:flex">
-        <ThreadList
-          threads={threads}
-          activeId={activeThreadId}
-          loading={threadsLoading}
-          onSelect={handleSelectThread}
-          onCreate={handleCreateThread}
-          onDelete={handleDeleteThread}
-        />
-      </div>
+    <div className="relative min-h-screen bg-gray-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <button
+        type="button"
+        onClick={() => setThreadsOpen(true)}
+        className="fixed left-4 top-4 z-40 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 shadow transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+      >
+        ☰ Threads
+      </button>
 
-      <div className="relative flex flex-1 flex-col">
-        <button
-          type="button"
-          onClick={() => setThreadsOpen(true)}
-          className="fixed left-4 top-4 z-40 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 shadow transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800 lg:hidden"
-        >
-          ☰ Threads
-        </button>
+      {threadsOpen && (
+        <div className="fixed inset-0 z-40 flex">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setThreadsOpen(false)}
+          />
+          <ThreadList
+            threads={threads}
+            activeId={activeThreadId}
+            loading={threadsLoading}
+            onSelect={handleSelectThread}
+            onCreate={handleCreateThread}
+            onDelete={handleDeleteThread}
+            onClose={() => setThreadsOpen(false)}
+            className="relative z-50 h-full"
+          />
+        </div>
+      )}
 
-        {threadsOpen && (
-          <div className="fixed inset-0 z-40 flex lg:hidden">
-            <div
-              className="absolute inset-0 bg-black/40"
-              onClick={() => setThreadsOpen(false)}
-            />
-            <ThreadList
-              threads={threads}
-              activeId={activeThreadId}
-              loading={threadsLoading}
-              onSelect={handleSelectThread}
-              onCreate={handleCreateThread}
-              onDelete={handleDeleteThread}
-              onClose={() => setThreadsOpen(false)}
-              className="relative z-50 h-full"
-            />
-          </div>
-        )}
+      {error && threads.length > 0 && (
+        <div className="absolute left-1/2 top-4 z-30 w-[90%] max-w-xl -translate-x-1/2 rounded border border-red-300 bg-red-100 px-4 py-2 text-sm text-red-800 shadow dark:border-red-700 dark:bg-red-900 dark:text-red-100">
+          {error}
+        </div>
+      )}
 
-        {error && threads.length > 0 && (
-          <div className="absolute left-1/2 top-4 z-30 w-[90%] max-w-xl -translate-x-1/2 rounded border border-red-300 bg-red-100 px-4 py-2 text-sm text-red-800 shadow dark:border-red-700 dark:bg-red-900 dark:text-red-100">
-            {error}
-          </div>
-        )}
-
-        <ChatWindow
-          thread={activeThread}
-          messages={messages}
-          loading={messagesLoading}
-          onSend={handleSendMessage}
-          sending={sending}
-          model={model}
-          onModelChange={setModel}
-          useRetrieval={useRetrieval}
-          onToggleRetrieval={(next) => setUseRetrieval(Boolean(next))}
-          statusBadge={
-            <ModelStatusBadge
-              model={model}
-              token={token}
-            />
-          }
-        />
-      </div>
+      <ChatWindow
+        thread={activeThread}
+        messages={messages}
+        loading={messagesLoading}
+        onSend={handleSendMessage}
+        sending={sending}
+        model={model}
+        onModelChange={setModel}
+        useRetrieval={useRetrieval}
+        onToggleRetrieval={(next) => setUseRetrieval(Boolean(next))}
+        statusBadge={<ModelStatusBadge model={model} token={token} />}
+      />
     </div>
   );
 }
