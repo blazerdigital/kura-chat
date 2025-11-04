@@ -1,4 +1,6 @@
-const rawBase = (import.meta.env.VITE_KURA_API_BASE || "").trim();
+const rawBase = (
+  import.meta.env.VITE_KURA_API_BASE || "https://bridge.blazerdigital.com"
+).trim();
 const API_BASE = rawBase.endsWith("/") ? rawBase.slice(0, -1) : rawBase;
 
 export const buildApiUrl = (path) => {
