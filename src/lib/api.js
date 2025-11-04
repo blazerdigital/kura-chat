@@ -1,7 +1,7 @@
 const configuredBase = (import.meta.env.VITE_KURA_API_BASE || "").trim();
 const sanitizedBase = configuredBase
   ? configuredBase.replace(/^http:\/\//i, "https://")
-  : "https://bridge.blazerdigital.com";
+  : "https://api.blazerdigital.com";
 
 const API_BASE = sanitizedBase.endsWith("/")
   ? sanitizedBase.slice(0, -1)
