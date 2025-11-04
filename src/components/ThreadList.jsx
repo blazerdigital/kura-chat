@@ -5,20 +5,35 @@ export default function ThreadList({
   onSelect,
   onCreate,
   onDelete,
+  onClose,
+  className = "",
 }) {
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+    <aside
+      className={`flex h-full w-72 flex-col border-r border-slate-200 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-950 ${className}`}
+    >
       <div className="flex items-center justify-between px-4 py-4">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
           Threads
         </h2>
-        <button
-          type="button"
-          onClick={onCreate}
-          className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-600"
-        >
-          + New Chat
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onCreate}
+            className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-blue-600"
+          >
+            + New Chat
+          </button>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full border border-slate-300 px-2 py-1 text-xs text-slate-500 transition hover:border-slate-400 hover:text-slate-700 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-500"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-4">

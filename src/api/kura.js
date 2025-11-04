@@ -49,11 +49,11 @@ export const getMessages = async (threadId, token) => {
   return handleResponse(res);
 };
 
-export const sendMessage = async (threadId, question, token) => {
+export const sendMessage = async (threadId, question, token, extras = {}) => {
   const res = await fetch(buildApiUrl("/ask"), {
     method: "POST",
     headers: jsonHeaders(token),
-    body: JSON.stringify({ thread_id: threadId, question }),
+    body: JSON.stringify({ thread_id: threadId, question, ...extras }),
   });
   return handleResponse(res);
 };
